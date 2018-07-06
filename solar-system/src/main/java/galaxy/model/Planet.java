@@ -1,5 +1,9 @@
 package galaxy.model;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.List;
+
 public class Planet {
 	
 	//degree's per day
@@ -40,10 +44,26 @@ public class Planet {
 	}
 	
 	public double getXPosition() {
-		return 2D;
+		BigDecimal bd = new BigDecimal(Math.cos(position));
+	    bd = bd.setScale(3, RoundingMode.HALF_UP);
+	    return radius * bd.doubleValue();
 	}
 
 	public double getYPosition() {
-		return 2D;
+		BigDecimal bd = new BigDecimal(Math.sin(position));
+	    bd = bd.setScale(3, RoundingMode.HALF_UP);
+	    return radius * bd.doubleValue();
 	}
+	
+	public static boolean areAllAligned(List<Planet> planets) {
+		boolean result = false;
+		if(planets != null && !planets.isEmpty()) {
+			Planet planet = planets.get(0);
+			for(Planet plan : planets) {
+				
+			}
+		}
+		return result;
+	}
+	
 }

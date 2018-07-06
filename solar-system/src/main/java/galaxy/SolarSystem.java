@@ -70,12 +70,21 @@ public class SolarSystem {
 		
     	System.out.println(Weather.DROUGHT.getTimes());
     	System.out.println(Weather.NORMAL.getTimes());
+    	System.out.println(Weather.CNPT.getTimes());
 	}
 	
 	//any angle % 90 reduce it to first quadrant.
 	public static void checkWeather() {
 		Weather weather2 = Weather.NORMAL;
 		weather2 = checkForDrought();
+		if (weather2 == Weather.NORMAL) {
+			weather2 = checkForCNPT();
+		}		
+		
+		if (weather2 == Weather.NORMAL) {
+			weather2 = checkForCNPT();
+		}
+		
 		if(weather2 != weather) {
 			weather2.addTimes();
 		}
@@ -91,10 +100,31 @@ public class SolarSystem {
 		}
 		return weather;
 	}
-	
-	public static Weather checkForRainy() {
+
+	//area of triangle is
+	//1/2[x1(y2-y3)+x2(y3-y1)+x3(y1-y2)]
+	//if area = 0, it means they are aligned
+	public static Weather checkForCNPT() {
 		Weather weather = Weather.NORMAL;
+		double areaOfTriangle = areaOfPlanets();
+		
+		if(areaOfTriangle == 0) {
+			weather = Weather.CNPT;
+		}
 		return weather;
+	}
+	
+	public static double areaOfPlanets() {
+		double x1 = civilizations.get(0).getXPosition();
+		double x2 = civilizations.get(1).getXPosition();
+		double x3 = civilizations.get(2).getXPosition();
+		double y1 = civilizations.get(0).getYPosition();
+		double y2 = civilizations.get(1).getYPosition();
+		double y3 = civilizations.get(2).getYPosition();
+		
+		double areaOfTriangle = (x1*(y2-y3)+x2*(y3-y1)+x3*(y1-y2)) / 2;
+		
+		return areaOfTriangle;
 	}
 	
 }
