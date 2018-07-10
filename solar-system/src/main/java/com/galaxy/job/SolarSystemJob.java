@@ -1,9 +1,8 @@
 package com.galaxy.job;
 
-import java.util.ArrayList;
-import java.util.List;
 import com.galaxy.model.Civilization;
 import com.galaxy.model.Day;
+import com.galaxy.model.SolarSystem;
 import com.galaxy.model.Weather;
 import com.galaxy.service.DayService;
 import com.galaxy.utils.Point;
@@ -16,26 +15,18 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 
 @Component
-public class SolarSystem {
-	private List<Civilization> civilizations = new ArrayList<>();
+public class SolarSystemJob {
 	private Weather weather;
 	private double maxPerimeter = 0;
 	private int maxRainyDay = -1;
 	private int day = 1;
-	private static final Logger logger = LoggerFactory.getLogger(SolarSystem.class);
+	private static final Logger logger = LoggerFactory.getLogger(SolarSystemJob.class);
 
 	@Autowired
 	DayService dayService;
-
-	public SolarSystem() {
-		Civilization vulcanos = new Civilization(-1, 500, 0,"vulcanos");
-		Civilization ferengis = new Civilization(-3, 2000, 0, "ferengis");
-		Civilization betasoides = new Civilization(5, 1000, 0, "betasoides");
-
-		civilizations.add(vulcanos);
-		civilizations.add(ferengis);
-		civilizations.add(betasoides);
-	}
+	
+	@Autowired
+	SolarSystem solarSystem;
 
 	@PostConstruct
 	public void runForTenCycles(){
@@ -46,14 +37,14 @@ public class SolarSystem {
 	}
 
 	private void nextDay() {
-		for(Civilization civilization : civilizations) {
+		for(Civilization civilization : solarSystem.getCivilizations()) {
 			civilization.nextDay();
 		}
 	}
 
 	private boolean cycleDone() {
 		boolean result = true;
-		for(Civilization civilization : civilizations) {
+		for(Civilization civilization : solarSystem.getCivilizations()) {
 			result = result && civilization.getPosition() == 0;
 		}
 		return result;
@@ -81,9 +72,10 @@ public class SolarSystem {
 	private void checkWeather() {
 		Weather weather2 = Weather.NORMAL;
 
-		Triangle triangle = new Triangle(new Point(civilizations.get(0).getXPosition(), civilizations.get(0).getYPosition()),
-				new Point(civilizations.get(1).getXPosition(), civilizations.get(1).getYPosition()),
-				new Point(civilizations.get(2).getXPosition(), civilizations.get(2).getYPosition()));
+		Triangle triangle = new Triangle(
+				new Point(solarSystem.getCivilizations().get(0).getXPosition(), solarSystem.getCivilizations().get(0).getYPosition()),
+				new Point(solarSystem.getCivilizations().get(1).getXPosition(), solarSystem.getCivilizations().get(1).getYPosition()),
+				new Point(solarSystem.getCivilizations().get(2).getXPosition(), solarSystem.getCivilizations().get(2).getYPosition()));
 
 		weather2 = checkForDrought();
 
@@ -104,9 +96,9 @@ public class SolarSystem {
 	//if in the first quadrant all the angles are equals means they are alligned with center.
 	private Weather checkForDrought() {
 		Weather weather = Weather.NORMAL;
-		Civilization civ = civilizations.get(0);
-		if((civ.getPosition() % 90) == (civilizations.get(1).getPosition() % 90)
-				&& (civ.getPosition() % 90) == (civilizations.get(2).getPosition() % 90)) {
+		Civilization civ = solarSystem.getCivilizations().get(0);
+		if((civ.getPosition() % 90) == (solarSystem.getCivilizations().get(1).getPosition() % 90)
+				&& (civ.getPosition() % 90) == (solarSystem.getCivilizations().get(2).getPosition() % 90)) {
 			weather = Weather.DROUGHT;
 		}
 		return weather;
