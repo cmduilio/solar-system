@@ -1,13 +1,7 @@
 package com.galaxy.dao;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 
 import com.galaxy.model.Day;
 import org.slf4j.Logger;
@@ -44,7 +38,7 @@ public class DayDaoImpl implements DayDao {
 		return DaysList;
 	}
 
-	public Day getById(Long id) {
+	public Day getById(int id) {
 		Day p = (Day) entityManager.find(Day.class, id);
 		logger.info("Day loaded successfully, Day details=" + p);
 		return p;
@@ -56,18 +50,5 @@ public class DayDaoImpl implements DayDao {
 			entityManager.remove(p);
 		}
 		logger.info("Day deleted successfully, Day details=" + p);
-	}
-
-	public Day getByDay(int day) {
-		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-		CriteriaQuery<Day> criteria = cb.createQuery(Day.class);
-		Root<Day> root = criteria.from(Day.class);
-		List<Predicate> predicates = new ArrayList<Predicate>();
-		predicates.add(cb.equal(root.get("day"), day));
-		criteria.where(predicates.toArray(new Predicate[predicates.size()])).distinct(true);
-
-		Day Day = (Day) entityManager.createQuery(criteria).getSingleResult();
-		logger.info("Day ::" + Day);
-		return Day;
 	}
 }

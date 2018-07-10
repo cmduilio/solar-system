@@ -36,7 +36,7 @@ public class DayServiceImpl implements DayService{
 	}
 
 	@Transactional
-	public Day getById(Long id) {
+	public Day getById(int id) {
 		return this.dayDao.getById(id);
 	}
 
@@ -45,8 +45,4 @@ public class DayServiceImpl implements DayService{
 		this.dayDao.remove(id);
 	}
 
-	@Transactional
-	public Day getByDay(int day) {
-		return this.dayDao.getByDay(day);
-	}
 }

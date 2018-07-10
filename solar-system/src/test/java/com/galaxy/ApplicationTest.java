@@ -18,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 import com.galaxy.controller.WeatherController;
 import com.galaxy.job.SolarSystemJob;
 import com.galaxy.model.Day;
+import com.galaxy.model.Weather;
 import com.galaxy.service.DayService;
 import com.galaxy.utils.Point;
 import com.galaxy.utils.Triangle;
@@ -96,15 +97,15 @@ public class ApplicationTest {
 	
 	@Test
 	public void callDayService() {
-		Day day = dayService.getByDay(361);
-		assertTrue(day.getWeather().equals("Sequia"));
+		Day day = dayService.getById(361);
+		assertTrue(day.getWeather().equals(Weather.DROUGHT.getName()));
 	}
 	
 	@Test
 	public void callWeatherService() {
 		RestTemplate restTemplate = new RestTemplate();
 		Day day = restTemplate.getForObject("http://localhost:" + port + "/weather?day=1", Day.class);
-		assertTrue(day.getWeather().equals("Sequia"));
+		assertTrue(day.getWeather().equals(Weather.DROUGHT.getName()));
 	}
 
 }

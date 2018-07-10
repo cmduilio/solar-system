@@ -18,9 +18,9 @@ public class WeatherController implements com.galaxy.controller.Controller{
 		Day response;
 
 		if(day != null) {
-			try {
-				response = dayService.getByDay(day.intValue());;
-			}catch(Exception ex){
+			response = dayService.getById(day.intValue());
+			
+			if(response == null) {
 				throw new Exception("Día no encontrado");
 			}
 		}else {
